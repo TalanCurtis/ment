@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 // import axios from 'axios';
 import TaskCard from '../../components/TaskCard/TaskCard';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {getTasks, addTask, deleteTask} from '../../ducks/reducer';
 
@@ -64,9 +63,9 @@ class TaskList extends Component {
     const tasksList = this.props.tasks.map((x, i) => {
       return (
         <div key={i}>
-          <Link to={'/TaskDetails/' + x.id} style={{ paddingLeft: 13, textDecoration: 'none', color: 'black' }}>
-            <TaskCard title={x.title} id={x.id} delete={this.handleDelete} />
-          </Link>
+          {/* <Link to={'/TaskDetails/' + x.id} style={{ paddingLeft: 13, textDecoration: 'none', color: 'black' }}> */}
+            <TaskCard title={x.title} id={x.id} delete={this.handleDelete} link={'/TaskDetails/' + x.id} />
+          {/* </Link> */}
         </div>
       )
     })
