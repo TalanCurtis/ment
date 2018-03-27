@@ -1,65 +1,69 @@
 import React, { Component } from 'react';
 import axios from 'axios'
 import TaskCard from '../../components/TaskCard/TaskCard'
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { connect } from 'react-redux';
 
 class TaskList extends Component {
-  constructor(){
+  constructor() {
     super()
     this.state = {
-      tasks:[],
-      newTask:{
-        title:'',
-        description:'',
+      tasks: [],
+      newTask: {
+        title: '',
+        description: '',
         completed: false
       }
     }
     this.handleDelete = this.handleDelete.bind(this)
   }
-  componentDidMount(){
+  componentDidMount() {
     axios.get('https://practiceapi.devmountain.com/api/tasks').then(res => {
-      this.setState({tasks: res.data})
+      this.setState({ tasks: res.data })
       console.log(res.data)
     })
+    console.log('props by redux',this.props)
   }
-  handleChange(title, value){
-    let copy = Object.assign({}, this.state.newTask, {[title]:value})
+  handleChange(title, value) {
+    let copy = Object.assign({}, this.state.newTask, { [title]: value })
     this.setState({
-      newTask:copy
+      newTask: copy
     })
     console.log('state', this.state.newTask)
   }
 
-  handleAdd(){
+  handleAdd() {
     axios.post('https://practiceapi.devmountain.com/api/tasks', this.state.newTask).then(res => {
-      this.setState({tasks: res.data})
+      this.setState({ tasks: res.data })
     })
-    
+
   }
 
-  handleDelete(id){
+  handleDelete(id) {
     console.log('deleted', id)
-    axios.delete('https://practiceapi.devmountain.com/api/tasks/'+id).then(res => {
+    axios.delete('https://practiceapi.devmountain.com/api/tasks/' + id).then(res => {
       console.log(res.data)
-      this.setState({tasks: res.data})
+      this.setState({ tasks: res.data })
     })
   }
 
   render() {
-    const tasksList = this.state.tasks.map((x, i)=>{ return(
-      <div key={i}>
-        <Link to={'/TaskDetails/'+x.id} style={{paddingLeft: 13, textDecoration: 'none', color:'black'}}>
-        <TaskCard title={x.title} id={x.id} delete={this.handleDelete}/>
-        </Link>
-      </div>
-    )}) 
+    const tasksList = this.state.tasks.map((x, i) => {
+      return (
+        <div key={i}>
+          <Link to={'/TaskDetails/' + x.id} style={{ paddingLeft: 13, textDecoration: 'none', color: 'black' }}>
+            <TaskCard title={x.title} id={x.id} delete={this.handleDelete} />
+          </Link>
+        </div>
+      )
+    })
 
     return (
       <div className="App">
         <div>
           <h1>To-Do:</h1>
-          <input title='title' type="text" onChange={(e)=>this.handleChange(e.target.title, e.target.value)}/>
-          <button disabled={!this.state.newTask.title} onClick={()=>this.handleAdd()}> Add New Task</button>
+          <input title='title' type="text" onChange={(e) => this.handleChange(e.target.title, e.target.value)} />
+          <button disabled={!this.state.newTask.title} onClick={() => this.handleAdd()}> Add New Task</button>
         </div>
         {tasksList}
       </div>
@@ -67,4 +71,8 @@ class TaskList extends Component {
   }
 }
 
-export default TaskList;
+function mapStateToProps(state) {
+  return state
+}
+
+export default connect(mapStateToProps)(TaskList);
