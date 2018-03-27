@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import {connect} from 'react-redux';
+import { deleteTask, getTasks } from '../../ducks/reducer';
 
 class TaskDetails extends Component {
     constructor() {
@@ -22,15 +24,31 @@ class TaskDetails extends Component {
     }
 
     componentDidMount() {
+        // let taskId = this.props.match.params.id * 1
+        // assessment 1
+        // axios.get('https://practiceapi.devmountain.com/api/tasks').then(res => {
+        //     let filtered = res.data.filter(x => x.id === taskId)
+        //     this.setState({
+        //         originalTask: filtered[0],
+        //         updatedTask: filtered[0]
+        //     })
+        //     console.log(this.state)
+        // })
+
+        // assessment 2
         let taskId = this.props.match.params.id * 1
-        axios.get('https://practiceapi.devmountain.com/api/tasks').then(res => {
-            let filtered = res.data.filter(x => x.id === taskId)
-            this.setState({
-                originalTask: filtered[0],
-                updatedTask: filtered[0]
-            })
-            console.log(this.state)
+        this.props.getTasks().then(res => {
+            let filtered = this.props.tasks.filter(x => x.id === taskId)
+                this.setState({
+                    originalTask: filtered[0],
+                    updatedTask: filtered[0]
+                })
         })
+
+    }
+
+    test(){
+        console.log('props', this.props)
     }
 
     handleChange(title, value) {
@@ -55,13 +73,19 @@ class TaskDetails extends Component {
     }
 
     handleDelete() {
+        // let id = this.state.originalTask.id
+        // assesment 1
+        // console.log('deleted', id)
+        // axios.delete('https://practiceapi.devmountain.com/api/tasks/' + id).then(res => {
+        //     console.log(res.data)
+        //     this.setState({ tasks: res.data })
+        //     this.props.history.push('/')
+        // })
+
+        // assessment 2
         let id = this.state.originalTask.id
-        console.log('deleted', id)
-        axios.delete('https://practiceapi.devmountain.com/api/tasks/' + id).then(res => {
-            console.log(res.data)
-            this.setState({ tasks: res.data })
-            this.props.history.push('/')
-        })
+        this.props.deleteTask(id)
+        this.props.history.push('/')
     }
 
     handleCancel() {
@@ -74,7 +98,7 @@ class TaskDetails extends Component {
         let body = this.state.updatedTask
         body.completed = !this.state.originalTask.completed
         console.log('body', id, body)
-        axios.put('https://practiceapi.devmountain.com/api/tasks/' + id, body)
+        axios.put('https://practiceapi.devmountain.com/api/tasks/'+ id, body)
             .then(res => {
                 console.log('res', res.data)
                 let filtered = res.data.filter(x => x.id === id)
@@ -89,6 +113,7 @@ class TaskDetails extends Component {
         return (
             <div>
                 <Link to={'/'}>back to Tasks</Link>
+                <button onClick={()=>this.test()}>Test</button>
                 <div className='Details'>
                     <div>
                         <h1>Task:</h1>
@@ -118,4 +143,14 @@ class TaskDetails extends Component {
     }
 }
 
-export default TaskDetails;
+
+const actionOutputs={
+    getTasks,
+    deleteTask
+  }
+  
+  function mapStateToProps(state) {
+    return state
+  }
+
+export default connect(mapStateToProps, actionOutputs)(TaskDetails);
