@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios'
 import TaskCard from '../../components/TaskCard/TaskCard'
+import {Link} from 'react-router-dom'
 
 class TaskList extends Component {
   constructor(){
@@ -47,7 +48,9 @@ class TaskList extends Component {
   render() {
     const tasksList = this.state.tasks.map((x, i)=>{ return(
       <div key={i}>
+        <Link to={'/TaskDetails/'+x.id} style={{paddingLeft: 13, textDecoration: 'none', color:'black'}}>
         <TaskCard title={x.title} id={x.id} delete={this.handleDelete}/>
+        </Link>
       </div>
     )}) 
 

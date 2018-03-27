@@ -7,6 +7,6 @@ import TaskDetails from './views/TaskDetails/TaskDetails';
 export default (
     <Switch>
         <Route exact path='/' component={TaskList} />
-        <Route path='/TaskDetails/' component={TaskDetails} />
+        <Route path='/TaskDetails/:id' component={TaskDetails} />
     </Switch>
 )
