@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import axios from 'axios';
+import axios from 'axios';
 import TaskCard from '../../components/TaskCard/TaskCard';
 import { connect } from 'react-redux';
 import {getTasks, addTask, deleteTask} from '../../ducks/reducer';
@@ -16,6 +16,7 @@ class TaskList extends Component {
       }
     }
     this.handleDelete = this.handleDelete.bind(this)
+    this.handleComplete = this.handleComplete.bind(this)
   }
   componentDidMount() {
     // assessment 1
@@ -59,20 +60,34 @@ class TaskList extends Component {
     this.props.deleteTask(id)
   }
 
+  handleComplete(task) {
+    console.log('complete', task)
+    let body = task
+    body.completed = !body.completed
+    axios.patch('https://practiceapi.devmountain.com/api/tasks/'+ task.id, body).then(res=>{
+        console.log('res',res.data)
+        this.props.getTasks()
+    })
+    
+}
+
+
   render() {
     const tasksList = this.props.tasks.map((x, i) => {
       return (
         <div key={i}>
-          {/* <Link to={'/TaskDetails/' + x.id} style={{ paddingLeft: 13, textDecoration: 'none', color: 'black' }}> */}
-            <TaskCard title={x.title} id={x.id} delete={this.handleDelete} link={'/TaskDetails/' + x.id} />
-          {/* </Link> */}
+            <TaskCard title={x.title} id={x.id} 
+            delete={this.handleDelete} 
+            link={'/TaskDetails/' + x.id} 
+            handleComplete={this.handleComplete} 
+            task={x}
+            completed={x.completed}/>
         </div>
       )
     })
 
     return (
       <div className="App">
-        {/* {JSON.stringify(this.props.tasks)} */}
         <button onClick={()=>console.log(this.props)}>Test</button>
         <div>
           <h1>To-Do:</h1>

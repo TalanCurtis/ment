@@ -11,7 +11,14 @@ export default function TaskCard(props) {
                 </Link>
             </div>
             <div>
-                <button style={{ 'backgroundColor': "green", 'border': "none", 'height': '50px' }}>Complete</button>
+                {props.completed? 
+                    <button style={{ 'backgroundColor': "green", 'border': "none", 'height': '50px' }}
+                    onClick={()=>props.handleComplete(props.task)}
+                    >Complete</button>
+                    :<button style={{ 'backgroundColor': "purple", 'border': "none", 'height': '50px' }}
+                    onClick={()=>props.handleComplete(props.task)}
+                    >Completed</button>
+                }
                 <button style={{ 'backgroundColor': "red", 'border': "none", 'height': '50px' }}
                     onClick={() => props.delete(props.id)}
                 >X</button>

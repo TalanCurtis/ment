@@ -92,21 +92,24 @@ class TaskDetails extends Component {
         console.log('cancel')
         this.setState({ updatedTask: this.state.originalTask })
     }
+
     handleComplete() {
         console.log('complete')
         let id = this.state.originalTask.id
-        let body = this.state.updatedTask
-        body.completed = !this.state.originalTask.completed
-        console.log('body', id, body)
-        axios.put('https://practiceapi.devmountain.com/api/tasks/'+ id, body)
-            .then(res => {
-                console.log('res', res.data)
-                let filtered = res.data.filter(x => x.id === id)
-                this.setState({
-                    originalTask: filtered[0],
-                    updatedTask: filtered[0]
-                })
+        let body = this.state.originalTask
+        // console.log('id', id, body.completed)
+        body.completed = !body.completed
+        // console.log('id', id, body)
+        axios.patch('https://practiceapi.devmountain.com/api/tasks/'+ id, body).then(res=>{
+            // console.log('res',res.data)
+            this.props.getTasks().then(res => {
+                let filtered = this.props.tasks.filter(x => x.id === id)
+                    this.setState({
+                        originalTask: filtered[0],
+                        updatedTask: filtered[0]
+                    })
             })
+        })
     }
 
     render() {
